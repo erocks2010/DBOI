@@ -1,3 +1,12 @@
-#marketprice-container,#marketprice-container tr th {
+#marketprice-container,#marketprice-container tr th,td{
     border:solid black 1px;
+    width:90%;
+    border-collapse: collapse;
+}
+
+#marketprice-container th{
+    text-align: center;
+}
+#marketprice-container td{
+    text-align: left;
 }

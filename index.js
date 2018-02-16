@@ -33,12 +33,19 @@ client.debug = function (msg) {
 function connectCallback() {
   console.log('Step 1 :: Connection established with Stomp Server');
   var sub = client.subscribe('/fx/prices', function (data) {
-    let currencyInfo = JSON.parse(data.body);
-    console.log(currenciesInOrder);
-    if (currenciesInOrder.indexOf(currencyInfo.name) == -1) {
-      currenciesInOrder.push(currencyInfo.name);
-      insertRowInTable(currenciesInOrder.length, currencyInfo);
+    let currentCurrenyInfo = JSON.parse(data.body);
+    console.log(currentCurrenyInfo);
+    if (currenciesInOrder.map((currencyInfo) => currencyInfo[0]).indexOf(currentCurrenyInfo.name) == -1) {
+      let _currentCurrencyInfo = objectToArray(currentCurrenyInfo);
+      currenciesInOrder.push(_currentCurrencyInfo);
+      sortTable();
+      drawTable();
     }
+    else {
+      sortTable(currentCurrenyInfo);
+      drawTable();
+    }
+    // updateRowInTable(currenciesInOrder.indexOf(currentCurrenyInfo.name) + 1, currentCurrenyInfo)
     // console.log(Date.now())
     // if (refreshAfter30Seconds()) {
     //   console.log('pass data to view')
@@ -68,17 +75,58 @@ function refreshAfter30Seconds() {
   }
 }
 
-function insertRowInTable(rowIndex, currencyInfo) {
+function insertRowInTable(rowIndex, currentCurrenyInfo) {
   let table = document.getElementById('marketprice-container');
   let row = table.insertRow(rowIndex);
   for (let i = 0; i < 7; i++) {
     let cell = row.insertCell(i);
-    cell.innerHTML = currencyInfo[Object.keys(currencyInfo)[i]];
+    cell.innerHTML = currentCurrenyInfo[Object.keys(currentCurrenyInfo)[i]];
   }
 }
 
-function updateRowInTable(){
-  
+function updateRowInTable(rowIndex, currentCurrenyInfo) {
+  let table = document.getElementById('marketprice-container');
+  let row = table.getElementsByTagName("tr")[rowIndex];
+  for (let i = 0; i < 7; i++) {
+    let cell = row.getElementsByTagName('td')[i].innerHTML = currentCurrenyInfo[Object.keys(currentCurrenyInfo)[i]];
+  }
+}
+
+function drawTable() {
+  let table = document.getElementById('marketprice-container');
+  for (let i = 1; i <= currenciesInOrder.length; i++) {
+    let row = table.getElementsByTagName("tr")[i];
+    if (row==undefined) row=table.insertRow(i);
+    for (let j = 0; j < 7; j++) {
+      let cell=row.getElementsByTagName("td")[j];
+      if (cell==undefined) cell=row.insertCell(j);
+      cell.innerHTML = currenciesInOrder[i-1][j];
+    }
+  }
+}
+
+function sortTable(updateCurrency) {
+  if (updateCurrency) {
+    let indexToUpdate = currenciesInOrder.map((currency) => currency[0]).indexOf(updateCurrency.name);
+    currenciesInOrder.splice(indexToUpdate, 1);
+    currenciesInOrder.push(objectToArray(updateCurrency));
+  }
+  currenciesInOrder
+    // .map((currenyInfo)=>currencyInfo.lastChangeBid)
+    .sort(function (a, b) {
+      if (a[6] < b[6]) return -1;
+      else return 1;
+    })
+
+
+}
+
+function objectToArray(object) {
+  let arr = [];
+  for (key of Object.keys(object)) {
+    if (object.hasOwnProperty(key)) arr.push(object[key]);
+  }
+  return arr;
 }
 
 
