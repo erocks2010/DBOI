@@ -10,6 +10,36 @@
 </head>
 
 <body>
+    <h3>Assumptions for this task</h3>
+    <ul>
+        <li>The Table Updates Continously and <strong>is always sorted</strong> by LastChangedBid value</li>
+    </ul>
+    <h3>Approach followed</h3>
+    <ol>
+        <li>UI
+            <ul>
+                <li>Blank table element in html file</li>
+                <li>The data from STOMP subscription is read</li>
+                <li>If the data is new then it is added to currenciesInOrder and passed onto sortTable function</li>
+                <li><strong>OR</strong> If the data is already present, then the data is passed onto sortTable function along
+                    with currenciesInOrder</li>
+                <li>The sortTable sorts the currenciesInOrder array by LastChangedBid column</li>
+                <li>The sorted currenciesInOrder array is passed to addSparklineDataToSortedTable where Sparkline data is added/updated
+                    on currenciesInOrder</li>
+                <li>The currenciesInOrder is then passed to drawTable function which clears the Table and then adds all the data
+                    to it and renders</li>
+            </ul>
+        </li>
+        <li>Testing
+            <ul>
+                <li>Mocha has been used for Testing.Run <em>npm test<em> to see the results</li>
+            </ul>
+        </li>
+    </ol>
+    <address>
+        <h4>Tarun Mathur</h4>
+        <a href="mailto:tarun.mathur@hotmail.com"><h5>e-mail :: tarun.mathur@hotmail.com<h5></a>
+    </address>
     <table id="marketprice-container">
         <tr>
             <th>
