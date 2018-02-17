@@ -96,11 +96,11 @@ function drawTable() {
   let table = document.getElementById('marketprice-container');
   for (let i = 1; i <= currenciesInOrder.length; i++) {
     let row = table.getElementsByTagName("tr")[i];
-    if (row==undefined) row=table.insertRow(i);
-    for (let j = 0; j < 7; j++) {
-      let cell=row.getElementsByTagName("td")[j];
-      if (cell==undefined) cell=row.insertCell(j);
-      cell.innerHTML = currenciesInOrder[i-1][j];
+    if (row == undefined) row = table.insertRow(i);
+    for (let j = 0; j < 8; j++) {
+      let cell = row.getElementsByTagName("td")[j];
+      if (cell == undefined) cell = row.insertCell(j);
+      cell.innerHTML = currenciesInOrder[i - 1][j];
     }
   }
 }
@@ -108,8 +108,11 @@ function drawTable() {
 function sortTable(updateCurrency) {
   if (updateCurrency) {
     let indexToUpdate = currenciesInOrder.map((currency) => currency[0]).indexOf(updateCurrency.name);
+    let sparklineData = currenciesInOrder[indexToUpdate][7];
+    let _updateCurreny = objectToArray(updateCurrency);
+    _updateCurreny.push(sparklineData);
     currenciesInOrder.splice(indexToUpdate, 1);
-    currenciesInOrder.push(objectToArray(updateCurrency));
+    currenciesInOrder.push(_updateCurreny);
   }
   currenciesInOrder
     // .map((currenyInfo)=>currencyInfo.lastChangeBid)
@@ -117,8 +120,17 @@ function sortTable(updateCurrency) {
       if (a[6] < b[6]) return -1;
       else return 1;
     })
+  addSparklineDataToSortedTable();
+}
 
-
+function addSparklineDataToSortedTable() {
+  currenciesInOrder.forEach(function (currencyInfo) {
+    if(currencyInfo[7]==undefined) currencyInfo[7]=[]
+    if (currencyInfo[7].length == 30) {
+      currencyInfo[7].shift();
+    }
+    currencyInfo[7].push((currencyInfo[1] + currencyInfo[2]) / 2);
+  })
 }
 
 function objectToArray(object) {
