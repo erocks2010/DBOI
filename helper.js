@@ -1,14 +1,14 @@
-function initiateUpdateTable(currenciesInOrder,data){
+function initiateUpdateTable(currenciesInOrder, data) {
     let currentCurrenyInfo = JSON.parse(data.body);
     if (currenciesInOrder.map((currencyInfo) => currencyInfo[0]).indexOf(currentCurrenyInfo.name) == -1) {
-      let _currentCurrencyInfo = objectToArray(currentCurrenyInfo);
-      currenciesInOrder.push(_currentCurrencyInfo);
-      sortTable(currenciesInOrder);
-      drawTable(currenciesInOrder);
+        let _currentCurrencyInfo = objectToArray(currentCurrenyInfo);
+        currenciesInOrder.push(_currentCurrencyInfo);
+        sortTable(currenciesInOrder);
+        drawTable(currenciesInOrder);
     }
     else {
-      sortTable(currenciesInOrder,currentCurrenyInfo);
-      drawTable(currenciesInOrder);
+        sortTable(currenciesInOrder, currentCurrenyInfo);
+        drawTable(currenciesInOrder);
     }
 }
 
@@ -70,6 +70,7 @@ function sortTable(currenciesInOrder, updateCurrency) {
             else return 1;
         })
     addSparklineDataToSortedTable(currenciesInOrder);
+    return currenciesInOrder;
 }
 
 function addSparklineDataToSortedTable(currenciesInOrder) {
@@ -80,11 +81,13 @@ function addSparklineDataToSortedTable(currenciesInOrder) {
         }
         currencyInfo[7].push((currencyInfo[1] + currencyInfo[2]) / 2);
     })
+    return currenciesInOrder;
 }
 
 module.exports = {
     objectToArray: objectToArray,
     drawTable: drawTable,
     sortTable: sortTable,
-    initiateUpdateTable:initiateUpdateTable
+    initiateUpdateTable: initiateUpdateTable,
+    addSparklineDataToSortedTable: addSparklineDataToSortedTable
 };
