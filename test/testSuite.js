@@ -75,15 +75,30 @@ describe('Sort Table', function () {
 });
 
 function a(i) {
-    describe('Adding SparkLine data', function () {
-        var currenciesInOrder = [['A', 4, 1, 1, 4, 0.1, 0.9]];
-        var expected = [['A', 4, 1, 1, 4, 0.1, 0.9, [2.5]]];
+    describe('Adding SparkLine data Dynamic Test Cases', function () {
+        var currenciesInOrder = [['A', 4, 1, 1, 4, 0.1, 0.9, []]];
         it('Test ' + i, function () {
+            currenciesInOrder[0][1] = i * 1;
+            currenciesInOrder[0][2] = i * 2;
+            var expected=currenciesInOrder;
+            expected[0][7].push((i * 1 + i * 2) / 2);
             assert.deepEqual(helper.addSparklineDataToSortedTable(currenciesInOrder), expected);
-            expected[0][7].push(2.5);
         })
     })
 }
 for (let i = 0; i < 29; i++) {
-    a(i)
+    a(i);
 }
+
+describe('Adding Sparkline data Boundary Value Test Case',function(){
+    var currenciesInOrder=[
+        ['A',1,1,2,2,0.1,0.2,[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]]
+    ]
+    var expected=[
+        ['A',1,1,2,2,0.1,0.2,[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,1]]
+    ]
+    it('Test 1',function(){
+        assert.deepEqual(helper.addSparklineDataToSortedTable(currenciesInOrder),expected)
+    })
+    
+})
