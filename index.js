@@ -100,7 +100,16 @@ function drawTable() {
     for (let j = 0; j < 8; j++) {
       let cell = row.getElementsByTagName("td")[j];
       if (cell == undefined) cell = row.insertCell(j);
-      cell.innerHTML = currenciesInOrder[i - 1][j];
+      if (j == 7) {
+        cell.innerHTML='';
+        let sparkElement = document.createElement('span');
+        let sparkline = new Sparkline(sparkElement);
+        sparkline.draw(currenciesInOrder[i - 1][j]);
+        cell.appendChild(sparkElement);
+      }
+      else {
+        cell.innerHTML = currenciesInOrder[i - 1][j];
+      }
     }
   }
 }
@@ -125,7 +134,7 @@ function sortTable(updateCurrency) {
 
 function addSparklineDataToSortedTable() {
   currenciesInOrder.forEach(function (currencyInfo) {
-    if(currencyInfo[7]==undefined) currencyInfo[7]=[]
+    if (currencyInfo[7] == undefined) currencyInfo[7] = []
     if (currencyInfo[7].length == 30) {
       currencyInfo[7].shift();
     }
